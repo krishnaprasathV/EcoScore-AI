@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Anomalies — Eco-Score{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>Anomaly Detection</h1>
+        <p>Buildings with abnormal energy or water consumption patterns</p>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card anomaly">
+        <div>
+            <div class="stat-label">Total Anomalies</div>
+            <div class="stat-value" style="color: var(--anomaly-red)">{{ total }}</div>
+        </div>
+        <div class="stat-sub">🚨 Showing latest 100</div>
+    </div>
+    <div class="stat-card energy">
+        <div>
+            <div class="stat-label">Detection Method</div>
+            <div class="stat-value" style="font-size: 1.35rem; color: var(--water-blue); padding-top: 8px;">Gradient Boosting</div>
+        </div>
+        <div class="stat-sub">🤖 Machine Learning Classifier</div>
+    </div>
+    <div class="stat-card warning">
+        <div>
+            <div class="stat-label">Model Accuracy</div>
+            <div class="stat-value" style="color: var(--primary)">99.95%</div>
+        </div>
+        <div class="stat-sub">🎯 F1 Score: 0.9873</div>
+    </div>
+</div>
+
+<!-- CHART + TRIGGER CRITERIA -->
+<div class="grid-2" style="margin-bottom:32px; align-items:start;">
+    <div class="card">
+        <div class="card-title">📊 Anomalies per Building</div>
+        <div style="position: relative; height: 250px; width: 100%;">
+            <canvas id="anomalyChart" style="height: 100%; width: 100%;"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title">🔍 What Triggers an Anomaly?</div>
+        <div style="font-size:0.88rem; color:var(--muted); line-height:2.1; font-weight: 500;">
+            <div style="display:flex; align-items:center; gap:8px;"><span style="color: var(--anomaly-red)">⚡</span> <span>Energy usage > 2.5× building benchmark baseline</span></div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="color: var(--water-blue)">💧</span> <span>Water consumption spike during campus off-hours</span></div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="color: var(--warning-yellow)">🌙</span> <span>High baseline demand at 12AM–5AM on weekends</span></div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="color: var(--primary)">🌡️</span> <span>Usage unusually high relative to current outdoor temperature</span></div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="color: var(--muted)">📊</span> <span>Reading values exceed 2 standard deviations from normal</span></div>
+        </div>
+        <div style="margin-top:20px; padding:16px; background:var(--anomaly-glow); border:1px solid rgba(248,113,113,0.25); border-radius:var(--radius-md); font-size:0.85rem; color:var(--anomaly-red); line-height: 1.5;">
+            ⚠️ <strong>Action Required:</strong> All identified anomalies should be inspected by building managers to prevent water leaks, equipment faults, or electrical short circuits.
+        </div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="card">
+    <div class="card-title">📋 Recent Anomaly Readings (Latest 100)</div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Building</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Energy (kWh)</th>
+                    <th>Water (L)</th>
+                    <th>Temp (°C)</th>
+                    <th>Occupancy</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td><span style="font-family:var(--font-head); font-weight:800; color:var(--primary);">{{ r.building_id }}</span></td>
+                    <td style="color:var(--text); font-weight:500;">{{ r.building_name }}</td>
+                    <td>{{ r.date }}</td>
+                    <td>{{ r.time }}</td>
+                    <td style="color:var(--anomaly-red); font-weight:700;">{{ r.energy_kwh }}</td>
+                    <td style="color:var(--water-blue); font-weight:600;">{{ r.water_liters }}</td>
+                    <td>{{ r.temperature_c }}</td>
+                    <td>{{ r.occupancy }}</td>
+                    <td><span class="badge badge-critical">⚠️ Anomaly</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function getThemeColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+        text: isDark ? 'hsl(210, 20%, 90%)' : 'hsl(222, 47%, 15%)',
+        muted: isDark ? 'hsl(215, 16%, 68%)' : 'hsl(215, 16%, 47%)',
+        border: isDark ? 'hsl(223, 20%, 18%)' : 'hsl(210, 14%, 88%)',
+        grid: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+    };
+}
+
+function updateChartTheme(chart, colors) {
+    chart.options.scales.x.ticks.color = colors.muted;
+    chart.options.scales.x.grid.color = colors.grid;
+    chart.options.scales.y.ticks.color = colors.muted;
+    chart.options.scales.y.grid.color = colors.grid;
+    chart.update();
+}
+
+Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+Chart.defaults.font.size = 11;
+
+const colors = getThemeColors();
+const ctx = document.getElementById('anomalyChart').getContext('2d');
+
+const anomalyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Anomaly Count',
+            data: {{ chart_data|safe }},
+            backgroundColor: 'rgba(248, 113, 113, 0.75)',
+            borderColor: 'var(--anomaly-red)',
+            borderWidth: 1.5,
+            borderRadius: 6,
+            borderSkipped: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+            legend: { 
+                display: true, 
+                labels: { color: colors.muted, font: { weight: 500 } } 
+            } 
+        },
+        scales: {
+            x: { ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+        }
+    }
+});
+
+window.addEventListener('themechanged', () => {
+    const freshColors = getThemeColors();
+    updateChartTheme(anomalyChart, freshColors);
+});
+</script>
+{% endblock %}

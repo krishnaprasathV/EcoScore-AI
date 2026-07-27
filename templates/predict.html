@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Predict Energy — Eco-Score{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>Energy Prediction</h1>
+        <p>Enter building details to forecast energy consumption and detect anomalies</p>
+    </div>
+</div>
+
+<div class="grid-2" style="align-items: start;">
+
+    <!-- FORM -->
+    <div class="card">
+        <div class="card-title">🔮 Input Parameters</div>
+        <form method="POST">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Building</label>
+                    <select name="building_id" class="form-control" required>
+                        {% for bid, bname in buildings.items() %}
+                        <option value="{{ bid }}">{{ bid }} — {{ bname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Day Type</label>
+                    <select name="day_type" class="form-control" required>
+                        <option value="Weekday">Weekday</option>
+                        <option value="Weekend">Weekend</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Hour (0–23)</label>
+                    <input type="number" name="hour" class="form-control"
+                           min="0" max="23" value="10" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Month (1–12)</label>
+                    <input type="number" name="month_num" class="form-control"
+                           min="1" max="12" value="6" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Temperature (°C)</label>
+                    <input type="number" name="temperature_c" class="form-control"
+                           step="0.1" value="32.0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Occupancy (persons)</label>
+                    <input type="number" name="occupancy" class="form-control"
+                           min="0" value="300" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Peak Demand (kW)</label>
+                    <input type="number" name="peak_demand_kw" class="form-control"
+                           step="0.1" value="40.0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Water Usage (Liters)</label>
+                    <input type="number" name="water_liters" class="form-control"
+                           step="0.1" value="500.0" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 10px;">
+                🔮 Run Machine Learning Prediction
+            </button>
+        </form>
+    </div>
+
+    <!-- RESULT -->
+    <div>
+        {% if result %}
+        {% set result_color = 'var(--anomaly-red)' if result.is_anomaly else 'var(--primary)' %}
+        {% set result_bg = 'var(--anomaly-glow)' if result.is_anomaly else 'var(--primary-glow)' %}
+        <div class="card" style="margin-bottom: 24px; border-color: {{ result_color }};">
+            <div class="card-title" style="color: {{ result_color }};">📋 Prediction Result</div>
+
+            <div style="text-align:center; padding: 24px 0;">
+                <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1.5px; font-weight:700;">
+                    {{ result.building_name }} ({{ result.building_id }})
+                </div>
+                <div class="result-value" style="color: {{ result_color }}">
+                    {{ result.predicted_energy }} <span style="font-size: 1.8rem; font-weight: 600;">kWh</span>
+                </div>
+                <div style="font-size:0.88rem; color:var(--muted); margin-top:8px; font-weight:500;">Forecasted Energy Consumption</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; margin-bottom: 20px;">
+                <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                    <div style="font-size:0.72rem; color:var(--muted); font-weight:600; margin-bottom:6px; letter-spacing:0.5px; text-transform:uppercase;">STATUS</div>
+                    <div style="font-weight:800; font-size:1.1rem; color: {{ result_color }};">
+                        {% if result.is_anomaly %}⚠️ ANOMALY{% else %}✅ NORMAL{% endif %}
+                    </div>
+                </div>
+                <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                    <div style="font-size:0.72rem; color:var(--muted); font-weight:600; margin-bottom:6px; letter-spacing:0.5px; text-transform:uppercase;">ANOMALY PROB</div>
+                    <div style="font-weight:800; font-size:1.1rem; color: {% if result.anomaly_prob > 50 %}var(--anomaly-red){% else %}var(--primary){% endif %};">
+                        {{ result.anomaly_prob }}%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Progress Bar for Anomaly Probability -->
+            <div style="margin-bottom: 24px;">
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); margin-bottom:6px; font-weight:600;">
+                    <span>Anomaly Probability Gauge</span>
+                    <span>{{ result.anomaly_prob }}%</span>
+                </div>
+                <div style="height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border);">
+                    <div style="height: 100%; width: {{ result.anomaly_prob }}%; background: {% if result.anomaly_prob > 50 %}var(--anomaly-red){% else %}var(--primary){% endif %}; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                </div>
+            </div>
+
+            {% if result.is_anomaly %}
+            <div style="background: {{ result_bg }}; border:1px solid rgba(248,113,113,0.25); border-radius:var(--radius-md); padding:16px; font-size:0.85rem; color:var(--anomaly-red); line-height:1.6;">
+                ⚠️ <strong>System Flag:</strong> This reading significantly deviates from baseline behavior. We recommend investigating building equipment, sensor calibration, or potential energy waste sources.
+            </div>
+            {% else %}
+            <div style="background: {{ result_bg }}; border:1px solid rgba(74,222,128,0.25); border-radius:var(--radius-md); padding:16px; font-size:0.85rem; color:var(--primary); line-height:1.6;">
+                ✅ <strong>System Status:</strong> Operations are normal. The model forecasts that energy demand will align closely with typical consumption ranges for these conditions.
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="card" style="text-align:center; padding: 64px 28px; border-style: dashed; border-width: 2px;">
+            <div style="font-size:3.5rem; margin-bottom:20px; filter: grayscale(0.2);">🔮</div>
+            <div style="font-family:var(--font-head); font-size:1.25rem; font-weight:800; margin-bottom:8px; color: var(--text-heading);">Ready for Prediction</div>
+            <div style="color:var(--muted); font-size:0.9rem; line-height:1.5;">Fill in the building parameters on the left and click <strong>Run Prediction</strong> to generate predictions using the Gradient Boosting model.</div>
+        </div>
+        {% endif %}
+
+        <!-- HOW IT WORKS -->
+        <div class="card" style="margin-top: 24px;">
+            <div class="card-title">📖 How It Works</div>
+            <div style="font-size:0.85rem; color:var(--muted); line-height:1.8;">
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.1rem;">🌳</span>
+                    <span><strong style="color:var(--text-heading)">ML Model:</strong> Gradient Boosting Regressor & Classifier (200 decision trees)</span>
+                </div>
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.1rem;">📈</span>
+                    <span><strong style="color:var(--text-heading)">Regression Fit:</strong> \(R^2 = 0.9832\) (highly accurate energy forecasting)</span>
+                </div>
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.1rem;">⚠️</span>
+                    <span><strong style="color:var(--text-heading)">Anomaly Accuracy:</strong> 99.95% overall classification accuracy (F1: 0.9873)</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.1rem;">📊</span>
+                    <span><strong style="color:var(--text-heading)">Training Set:</strong> Pre-calculated weights from 70,272 hourly database logs</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Support LaTeX Math rendering using simple KaTeX or MathJax style if needed, but standard text is fine. -->
+{% endblock %}

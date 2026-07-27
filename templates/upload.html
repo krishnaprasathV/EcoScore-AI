@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Upload CSV — Eco-Score{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>Upload Meter Data</h1>
+        <p>Upload a CSV file of building meter readings for bulk processing</p>
+    </div>
+</div>
+
+<div class="grid-2" style="align-items:start;">
+
+    <!-- UPLOAD FORM -->
+    <div>
+        <div class="card" style="margin-bottom:24px;">
+            <div class="card-title">📁 Upload CSV File</div>
+            <form method="POST" enctype="multipart/form-data">
+                <div style="border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 48px 32px; text-align:center; margin-bottom:20px; transition: var(--transition); cursor: pointer;"
+                     id="dropzone" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size:3rem; margin-bottom:16px; filter: grayscale(0.15);">📁</div>
+                    <div style="font-family:var(--font-head); font-weight:800; font-size:1.1rem; margin-bottom:6px; color: var(--text-heading);">Choose CSV File</div>
+                    <div style="color:var(--muted); font-size:0.85rem; margin-bottom:20px;">Drag & drop your meter readings CSV file here, or click to browse</div>
+                    <input type="file" name="csv_file" id="fileInput" accept=".csv"
+                           style="display:none" onchange="updateLabel(this)">
+                    <label for="fileInput" class="btn btn-outline" style="cursor:pointer;" onclick="event.stopPropagation()">
+                        Browse Files
+                    </label>
+                    <div id="fileName" style="margin-top:16px; font-size:0.85rem; color:var(--primary); font-weight:600; display:none;"></div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">
+                    📤 Upload & Validate Dataset
+                </button>
+            </form>
+        </div>
+
+        <!-- REQUIRED FORMAT -->
+        <div class="card">
+            <div class="card-title">📋 Required CSV Format</div>
+            <div class="table-wrap" style="margin-bottom: 16px;">
+                <table style="font-size:0.82rem;">
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="color:var(--primary); font-weight:600;">building_id</td><td style="color:var(--muted)">text</td><td>B001</td></tr>
+                        <tr><td style="color:var(--primary); font-weight:600;">date</td><td style="color:var(--muted)">YYYY-MM-DD</td><td>2024-06-15</td></tr>
+                        <tr><td style="color:var(--primary); font-weight:600;">time</td><td style="color:var(--muted)">HH:MM:SS</td><td>10:00:00</td></tr>
+                        <tr><td style="color:var(--primary); font-weight:600;">energy_kwh</td><td style="color:var(--muted)">decimal</td><td>45.2</td></tr>
+                        <tr><td style="color:var(--primary); font-weight:600;">water_liters</td><td style="color:var(--muted)">decimal</td><td>350.0</td></tr>
+                        <tr><td style="color:var(--muted); font-weight:500;">temperature_c</td><td style="color:var(--muted)">decimal</td><td>32.5 <span style="font-size:0.7rem; color:var(--muted);">(optional)</span></td></tr>
+                        <tr><td style="color:var(--muted); font-weight:500;">occupancy</td><td style="color:var(--muted)">integer</td><td>250 <span style="font-size:0.7rem; color:var(--muted);">(optional)</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding:14px; background:var(--primary-glow); border:1px solid rgba(74, 222, 128, 0.25); border-radius:var(--radius-md); font-size:0.85rem; color:var(--muted); line-height: 1.5;">
+                💡 <strong>Reference Template:</strong> You can use `campus_utility_january_sample.csv` or any other template export file as a standard reference format.
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div>
+        {% if stats %}
+        <div class="card" style="margin-bottom:24px; border-color: var(--primary);">
+            <div class="card-title" style="color: var(--primary);">📊 Upload Summary</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+                <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                    <div style="font-size:0.7rem; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600;">Total Rows</div>
+                    <div style="font-family:var(--font-head); font-size:2rem; font-weight:800; color:var(--primary)">{{ stats.rows }}</div>
+                </div>
+                <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                    <div style="font-size:0.7rem; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600;">Buildings</div>
+                    <div style="font-family:var(--font-head); font-size:2rem; font-weight:800; color:var(--water-blue)">{{ stats.buildings }}</div>
+                </div>
+                <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                    <div style="font-size:0.7rem; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600;">Avg Energy</div>
+                    <div style="font-family:var(--font-head); font-size:1.4rem; font-weight:800; color:var(--warning-yellow)">{{ stats.avg_energy }} <span style="font-size:0.8rem; font-weight:500;">kWh</span></div>
+                </div>
+                <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                    <div style="font-size:0.7rem; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600;">Avg Water</div>
+                    <div style="font-family:var(--font-head); font-size:1.4rem; font-weight:800; color:var(--water-blue)">{{ stats.avg_water }} <span style="font-size:0.8rem; font-weight:500;">L</span></div>
+                </div>
+            </div>
+            <div style="font-size:0.85rem; color:var(--muted); padding:14px; background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); text-align:center; font-weight: 500;">
+                📅 Date Range: <strong style="color:var(--text-heading)">{{ stats.date_range }}</strong>
+            </div>
+        </div>
+
+        <!-- PREVIEW TABLE -->
+        <div class="card">
+            <div class="card-title">📋 Dataset Preview (First 10 Rows)</div>
+            <div class="table-wrap">
+                <table style="font-size:0.82rem;">
+                    <thead>
+                        <tr>
+                            <th>Building</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Energy (kWh)</th>
+                            <th>Water (L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in preview %}
+                        <tr>
+                            <td style="color:var(--primary); font-weight:800;">{{ row.building_id }}</td>
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.time }}</td>
+                            <td style="color:var(--water-blue); font-weight:700;">{{ row.energy_kwh }}</td>
+                            <td style="font-weight:600;">{{ row.water_liters }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="card" style="text-align:center; padding:72px 28px; border-style:dashed; border-width: 2px;">
+            <div style="font-size:3.5rem; margin-bottom:20px; filter: grayscale(0.15);">📊</div>
+            <div style="font-family:var(--font-head); font-size:1.25rem; font-weight:800; margin-bottom:8px; color: var(--text-heading);">No Dataset Uploaded Yet</div>
+            <div style="color:var(--muted); font-size:0.9rem; line-height: 1.5;">Please upload a meter readings CSV file using the form on the left. The validation summary and first 10 rows preview will be displayed here.</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function updateLabel(input) {
+    const label = document.getElementById('fileName');
+    if (input.files && input.files[0]) {
+        label.innerHTML = '✨ ' + input.files[0].name;
+        label.style.display = 'block';
+        document.getElementById('dropzone').style.borderColor = 'var(--primary)';
+        document.getElementById('dropzone').style.background = 'var(--primary-glow)';
+    }
+}
+
+// Drag & drop highlight logic
+const dropzone = document.getElementById('dropzone');
+if (dropzone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = 'var(--primary)';
+            dropzone.style.background = 'var(--primary-glow)';
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            if (eventName === 'drop' && e.dataTransfer.files.length) {
+                document.getElementById('fileInput').files = e.dataTransfer.files;
+                updateLabel(document.getElementById('fileInput'));
+            } else if (document.getElementById('fileInput').files.length === 0) {
+                dropzone.style.borderColor = 'var(--border)';
+                dropzone.style.background = 'transparent';
+            }
+        }, false);
+    });
+}
+</script>
+{% endblock %}
