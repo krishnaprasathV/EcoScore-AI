@@ -11,39 +11,39 @@
     <style>
         :root {
             /* Design System Tokens - Light Mode */
-            --bg: hsl(210, 20%, 98%);
-            --surface: hsl(210, 20%, 94%);
+            --bg: hsl(210, 25%, 98%);
+            --surface: hsl(210, 20%, 95%);
             --card: hsl(0, 0%, 100%);
-            --border: hsl(210, 14%, 88%);
-            --border-hover: hsl(142, 50%, 80%);
+            --border: hsl(214, 15%, 89%);
+            --border-hover: hsl(150, 50%, 75%);
             
-            --primary: hsl(142, 70%, 45%);
-            --primary-hover: hsl(142, 72%, 35%);
-            --primary-glow: rgba(74, 222, 128, 0.12);
+            --primary: hsl(150, 75%, 32%);
+            --primary-hover: hsl(150, 75%, 26%);
+            --primary-glow: rgba(16, 185, 129, 0.08);
             
-            --water-blue: hsl(200, 95%, 45%);
-            --water-glow: rgba(96, 165, 250, 0.12);
+            --water-blue: hsl(214, 80%, 48%);
+            --water-glow: rgba(59, 130, 246, 0.08);
             
-            --anomaly-red: hsl(0, 84%, 60%);
-            --anomaly-glow: rgba(248, 113, 113, 0.12);
+            --anomaly-red: hsl(354, 70%, 45%);
+            --anomaly-glow: rgba(239, 68, 68, 0.08);
             
-            --warning-yellow: hsl(38, 92%, 50%);
-            --warning-glow: rgba(250, 204, 21, 0.12);
+            --warning-yellow: hsl(35, 85%, 45%);
+            --warning-glow: rgba(245, 158, 11, 0.08);
 
-            --text: hsl(222, 47%, 12%);
-            --text-heading: hsl(222, 47%, 8%);
-            --muted: hsl(215, 16%, 47%);
+            --text: hsl(218, 25%, 15%);
+            --text-heading: hsl(218, 30%, 10%);
+            --muted: hsl(218, 12%, 46%);
             
             --font-head: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             
-            /* Sidebar Custom Theme (Dark-green obsidian theme for both light/dark modes) */
-            --sidebar-bg: hsl(222, 47%, 8%);
+            /* Sidebar Custom Theme (Dark-navy theme) */
+            --sidebar-bg: hsl(220, 35%, 10%);
             --sidebar-border: rgba(255, 255, 255, 0.08);
-            --sidebar-text: hsl(215, 20%, 85%);
-            --sidebar-muted: hsl(215, 16%, 60%);
-            --sidebar-active-bg: rgba(74, 222, 128, 0.15);
-            --sidebar-active-text: hsl(142, 60%, 65%);
+            --sidebar-text: hsl(218, 20%, 80%);
+            --sidebar-muted: hsl(218, 12%, 55%);
+            --sidebar-active-bg: rgba(16, 185, 129, 0.15);
+            --sidebar-active-text: hsl(150, 70%, 75%);
             --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
             
             --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
@@ -58,28 +58,28 @@
 
         [data-theme="dark"] {
             /* Design System Tokens - Dark Mode */
-            --bg: hsl(222, 47%, 4%);
-            --surface: hsl(223, 47%, 7%);
-            --card: hsl(223, 47%, 10%);
-            --border: hsl(223, 20%, 16%);
-            --border-hover: hsl(142, 40%, 30%);
+            --bg: hsl(220, 30%, 6%);
+            --surface: hsl(220, 25%, 10%);
+            --card: hsl(220, 25%, 12%);
+            --border: hsl(220, 18%, 20%);
+            --border-hover: hsl(150, 45%, 35%);
             
-            --primary: hsl(142, 60%, 55%);
-            --primary-hover: hsl(142, 70%, 45%);
-            --primary-glow: rgba(74, 222, 128, 0.2);
+            --primary: hsl(150, 60%, 48%);
+            --primary-hover: hsl(150, 60%, 40%);
+            --primary-glow: rgba(16, 185, 129, 0.16);
             
-            --water-blue: hsl(200, 90%, 55%);
-            --water-glow: rgba(96, 165, 250, 0.2);
+            --water-blue: hsl(214, 75%, 58%);
+            --water-glow: rgba(59, 130, 246, 0.16);
             
-            --anomaly-red: hsl(0, 84%, 65%);
-            --anomaly-glow: rgba(248, 113, 113, 0.2);
+            --anomaly-red: hsl(354, 75%, 58%);
+            --anomaly-glow: rgba(239, 68, 68, 0.16);
             
-            --warning-yellow: hsl(38, 92%, 60%);
-            --warning-glow: rgba(250, 204, 21, 0.2);
+            --warning-yellow: hsl(38, 80%, 55%);
+            --warning-glow: rgba(245, 158, 11, 0.16);
 
-            --text: hsl(210, 20%, 98%);
+            --text: hsl(218, 20%, 90%);
             --text-heading: hsl(0, 0%, 100%);
-            --muted: hsl(215, 16%, 68%);
+            --muted: hsl(218, 12%, 65%);
             
             --card-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.35), 0 4px 12px -2px rgba(0, 0, 0, 0.25);
             --card-shadow-hover: 0 24px 48px -6px rgba(0, 0, 0, 0.5), 0 8px 24px -2px rgba(0, 0, 0, 0.35);
@@ -665,27 +665,38 @@
 
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <div class="logo-title">🌿 EcoScore</div>
+            <div class="logo-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--sidebar-active-text); margin-right: 2px;"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 0 9.5a7 7 0 0 1-8 8.5z"/><path d="M19 2v10"/></svg>
+                EcoScore
+            </div>
             <span>Campus Sustainability</span>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-label">Monitor</div>
             <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}" id="nav-dashboard">
-                <span class="icon">📊</span> Dashboard
+                <span class="icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                </span> Dashboard
             </a>
             <a href="/anomalies" class="nav-link {% if request.path == '/anomalies' %}active{% endif %}" id="nav-anomalies">
-                <span class="icon">⚠️</span> Anomalies
+                <span class="icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </span> Anomalies
             </a>
             <div class="nav-label">Tools</div>
             <a href="/predict" class="nav-link {% if request.path == '/predict' %}active{% endif %}" id="nav-predict">
-                <span class="icon">🔮</span> Predict Energy
+                <span class="icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </span> Predict Energy
             </a>
             <a href="/upload" class="nav-link {% if request.path == '/upload' %}active{% endif %}" id="nav-upload">
-                <span class="icon">📁</span> Upload CSV
+                <span class="icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </span> Upload CSV
             </a>
         </nav>
         <button id="themeToggle" class="theme-toggle" style="margin-top: auto; align-self: center;" onclick="toggleTheme()">
-            <span class="icon" id="themeIcon">🌙</span>
+            <span class="icon" id="themeIcon"></span>
             <span id="themeLabel">Dark Mode</span>
         </button>
     </aside>
@@ -727,7 +738,9 @@
             const icon = document.getElementById('themeIcon');
             const label = document.getElementById('themeLabel');
             if (icon && label) {
-                icon.textContent = isDark ? '☀️' : '🌙';
+                icon.innerHTML = isDark 
+                    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`
+                    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
                 label.textContent = isDark ? 'Light Mode' : 'Dark Mode';
             }
         }

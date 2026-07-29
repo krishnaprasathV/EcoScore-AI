@@ -13,7 +13,7 @@
 
     <!-- FORM -->
     <div class="card">
-        <div class="card-title">🔮 Input Parameters</div>
+        <div class="card-title">Input Parameters</div>
         <form method="POST">
             <div class="grid-2">
                 <div class="form-group">
@@ -73,7 +73,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 10px;">
-                🔮 Run Machine Learning Prediction
+                Run Machine Learning Prediction
             </button>
         </form>
     </div>
@@ -84,7 +84,7 @@
         {% set result_color = 'var(--anomaly-red)' if result.is_anomaly else 'var(--primary)' %}
         {% set result_bg = 'var(--anomaly-glow)' if result.is_anomaly else 'var(--primary-glow)' %}
         <div class="card" style="margin-bottom: 24px; border-color: {{ result_color }};">
-            <div class="card-title" style="color: {{ result_color }};">📋 Prediction Result</div>
+            <div class="card-title" style="color: {{ result_color }};">Prediction Result</div>
 
             <div style="text-align:center; padding: 24px 0;">
                 <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1.5px; font-weight:700;">
@@ -100,7 +100,7 @@
                 <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
                     <div style="font-size:0.72rem; color:var(--muted); font-weight:600; margin-bottom:6px; letter-spacing:0.5px; text-transform:uppercase;">STATUS</div>
                     <div style="font-weight:800; font-size:1.1rem; color: {{ result_color }};">
-                        {% if result.is_anomaly %}⚠️ ANOMALY{% else %}✅ NORMAL{% endif %}
+                        {% if result.is_anomaly %}ANOMALY{% else %}NORMAL{% endif %}
                     </div>
                 </div>
                 <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
@@ -123,18 +123,22 @@
             </div>
 
             {% if result.is_anomaly %}
-            <div style="background: {{ result_bg }}; border:1px solid rgba(248,113,113,0.25); border-radius:var(--radius-md); padding:16px; font-size:0.85rem; color:var(--anomaly-red); line-height:1.6;">
-                ⚠️ <strong>System Flag:</strong> This reading significantly deviates from baseline behavior. We recommend investigating building equipment, sensor calibration, or potential energy waste sources.
+            <div style="background: {{ result_bg }}; border:1px solid rgba(239,68,68,0.2); border-radius:var(--radius-md); padding:16px; font-size:0.85rem; color:var(--anomaly-red); line-height:1.6; display:flex; gap:10px; align-items:flex-start;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <div><strong>System Flag:</strong> This reading significantly deviates from baseline behavior. We recommend investigating building equipment, sensor calibration, or potential energy waste sources.</div>
             </div>
             {% else %}
-            <div style="background: {{ result_bg }}; border:1px solid rgba(74,222,128,0.25); border-radius:var(--radius-md); padding:16px; font-size:0.85rem; color:var(--primary); line-height:1.6;">
-                ✅ <strong>System Status:</strong> Operations are normal. The model forecasts that energy demand will align closely with typical consumption ranges for these conditions.
+            <div style="background: {{ result_bg }}; border:1px solid rgba(16,185,129,0.2); border-radius:var(--radius-md); padding:16px; font-size:0.85rem; color:var(--primary); line-height:1.6; display:flex; gap:10px; align-items:flex-start;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <div><strong>System Status:</strong> Operations are normal. The model forecasts that energy demand will align closely with typical consumption ranges for these conditions.</div>
             </div>
             {% endif %}
         </div>
         {% else %}
         <div class="card" style="text-align:center; padding: 64px 28px; border-style: dashed; border-width: 2px;">
-            <div style="font-size:3.5rem; margin-bottom:20px; filter: grayscale(0.2);">🔮</div>
+            <div style="margin-bottom:20px; display:inline-flex; justify-content:center; align-items:center; color: var(--muted);">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            </div>
             <div style="font-family:var(--font-head); font-size:1.25rem; font-weight:800; margin-bottom:8px; color: var(--text-heading);">Ready for Prediction</div>
             <div style="color:var(--muted); font-size:0.9rem; line-height:1.5;">Fill in the building parameters on the left and click <strong>Run Prediction</strong> to generate predictions using the Gradient Boosting model.</div>
         </div>
@@ -142,22 +146,22 @@
 
         <!-- HOW IT WORKS -->
         <div class="card" style="margin-top: 24px;">
-            <div class="card-title">📖 How It Works</div>
+            <div class="card-title">Model Specifications</div>
             <div style="font-size:0.85rem; color:var(--muted); line-height:1.8;">
-                <div style="margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:1.1rem;">🌳</span>
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--primary);"></span>
                     <span><strong style="color:var(--text-heading)">ML Model:</strong> Gradient Boosting Regressor & Classifier (200 decision trees)</span>
                 </div>
-                <div style="margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:1.1rem;">📈</span>
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--water-blue);"></span>
                     <span><strong style="color:var(--text-heading)">Regression Fit:</strong> \(R^2 = 0.9832\) (highly accurate energy forecasting)</span>
                 </div>
-                <div style="margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:1.1rem;">⚠️</span>
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--anomaly-red);"></span>
                     <span><strong style="color:var(--text-heading)">Anomaly Accuracy:</strong> 99.95% overall classification accuracy (F1: 0.9873)</span>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:1.1rem;">📊</span>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--muted);"></span>
                     <span><strong style="color:var(--text-heading)">Training Set:</strong> Pre-calculated weights from 70,272 hourly database logs</span>
                 </div>
             </div>

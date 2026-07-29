@@ -14,11 +14,13 @@
     <!-- UPLOAD FORM -->
     <div>
         <div class="card" style="margin-bottom:24px;">
-            <div class="card-title">📁 Upload CSV File</div>
+            <div class="card-title">Upload CSV File</div>
             <form method="POST" enctype="multipart/form-data">
                 <div style="border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 48px 32px; text-align:center; margin-bottom:20px; transition: var(--transition); cursor: pointer;"
                      id="dropzone" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size:3rem; margin-bottom:16px; filter: grayscale(0.15);">📁</div>
+                    <div style="margin-bottom:16px; display:inline-flex; justify-content:center; align-items:center; color: var(--muted);">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
                     <div style="font-family:var(--font-head); font-weight:800; font-size:1.1rem; margin-bottom:6px; color: var(--text-heading);">Choose CSV File</div>
                     <div style="color:var(--muted); font-size:0.85rem; margin-bottom:20px;">Drag & drop your meter readings CSV file here, or click to browse</div>
                     <input type="file" name="csv_file" id="fileInput" accept=".csv"
@@ -29,14 +31,14 @@
                     <div id="fileName" style="margin-top:16px; font-size:0.85rem; color:var(--primary); font-weight:600; display:none;"></div>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%;">
-                    📤 Upload & Validate Dataset
+                    Upload & Validate Dataset
                 </button>
             </form>
         </div>
 
         <!-- REQUIRED FORMAT -->
         <div class="card">
-            <div class="card-title">📋 Required CSV Format</div>
+            <div class="card-title">Required CSV Format</div>
             <div class="table-wrap" style="margin-bottom: 16px;">
                 <table style="font-size:0.82rem;">
                     <thead>
@@ -57,8 +59,9 @@
                     </tbody>
                 </table>
             </div>
-            <div style="padding:14px; background:var(--primary-glow); border:1px solid rgba(74, 222, 128, 0.25); border-radius:var(--radius-md); font-size:0.85rem; color:var(--muted); line-height: 1.5;">
-                💡 <strong>Reference Template:</strong> You can use `campus_utility_january_sample.csv` or any other template export file as a standard reference format.
+            <div style="padding:14px; background:var(--primary-glow); border:1px solid rgba(16,185,129,0.2); border-radius:var(--radius-md); font-size:0.85rem; color:var(--muted); line-height: 1.5; display:flex; gap:10px; align-items:flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px; color: var(--primary);"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <div><strong>Reference Template:</strong> You can use `campus_utility_january_sample.csv` or any other template export file as a standard reference format.</div>
             </div>
         </div>
     </div>
@@ -67,7 +70,7 @@
     <div>
         {% if stats %}
         <div class="card" style="margin-bottom:24px; border-color: var(--primary);">
-            <div class="card-title" style="color: var(--primary);">📊 Upload Summary</div>
+            <div class="card-title" style="color: var(--primary);">Upload Summary</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
                 <div style="background:var(--surface); border: 1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;">
                     <div style="font-size:0.7rem; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px; font-weight:600;">Total Rows</div>
@@ -93,7 +96,7 @@
 
         <!-- PREVIEW TABLE -->
         <div class="card">
-            <div class="card-title">📋 Dataset Preview (First 10 Rows)</div>
+            <div class="card-title">Dataset Preview (First 10 Rows)</div>
             <div class="table-wrap">
                 <table style="font-size:0.82rem;">
                     <thead>
@@ -122,7 +125,9 @@
 
         {% else %}
         <div class="card" style="text-align:center; padding:72px 28px; border-style:dashed; border-width: 2px;">
-            <div style="font-size:3.5rem; margin-bottom:20px; filter: grayscale(0.15);">📊</div>
+            <div style="margin-bottom:20px; display:inline-flex; justify-content:center; align-items:center; color: var(--muted);">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            </div>
             <div style="font-family:var(--font-head); font-size:1.25rem; font-weight:800; margin-bottom:8px; color: var(--text-heading);">No Dataset Uploaded Yet</div>
             <div style="color:var(--muted); font-size:0.9rem; line-height: 1.5;">Please upload a meter readings CSV file using the form on the left. The validation summary and first 10 rows preview will be displayed here.</div>
         </div>
@@ -134,7 +139,7 @@
 function updateLabel(input) {
     const label = document.getElementById('fileName');
     if (input.files && input.files[0]) {
-        label.innerHTML = '✨ ' + input.files[0].name;
+        label.innerHTML = input.files[0].name;
         label.style.display = 'block';
         document.getElementById('dropzone').style.borderColor = 'var(--primary)';
         document.getElementById('dropzone').style.background = 'var(--primary-glow)';
